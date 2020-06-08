@@ -11,7 +11,7 @@ export function NewTag(
     operator,
     dispatch,
   }) {
-  const cnt = useRef(0)
+  const id = useRef(0)
 
   const handleFieldChange = (val) => { dispatch({ type: 'update-new-field', value: val }) }
   const handleOperatorChange = (val) => { dispatch({ type: 'update-new-operator', value: val }) }
@@ -20,11 +20,11 @@ export function NewTag(
     dispatch(
       {
         type: 'add-new-tag',
-        id: cnt.current,
-        value: { field, operator, value, id: cnt.current }
+        id: id.current,
+        value: { field, operator, value, id: id.current }
       }
     )
-    cnt.current += 1
+    id.current += 1
   }, [dispatch, field, operator, value])
 
   return (
