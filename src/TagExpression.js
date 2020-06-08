@@ -23,7 +23,7 @@ function reducer(state, action) {
       return { ...state, newTag: { ...newTag, value: value } }
     case 'add-new-tag':
       return {
-        tags: { allIds: [...allIds, id], byId: { ...byId, [id]: value } },
+        tags: { allIds: [...allIds, id], byId: { ...byId, [id]: { id, ...newTag } } },
         newTag: { field: '', operator: '', value: '' }
       }
     case 'update-tag-field':

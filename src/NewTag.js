@@ -21,11 +21,10 @@ export function NewTag(
       {
         type: 'add-new-tag',
         id: id.current,
-        value: { field, operator, value, id: id.current }
       }
     )
     id.current += 1
-  }, [dispatch, field, operator, value])
+  }, [dispatch])
 
   return (
     <Tag

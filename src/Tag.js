@@ -1,13 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { ClickAwayListener } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { SubTag } from './SubTag'
 import styles from './Tag.module.css'
 
 const supportedOperator = ['==', '!=', '>', '<']
-const FIELD_SUBTAG = 'FIELD'
-const OPERATOR_SUBTAG = 'OPERATOR'
-const VALUE_SUBTAG = 'VALUE'
 
 export function Tag(
   {
@@ -25,32 +22,36 @@ export function Tag(
     ...divProps
   }) {
   const [editing, setEditing] = useState(!!stayEditable)
-  const [currentSubTag, setCurrentSubTag] = useState(FIELD_SUBTAG)
   const fieldInputRef = useRef(null)
   const operatorInputRef = useRef(null)
   const valueInputRef = useRef(null)
 
-  const handleTagFinish = () => {
-    if (!stayEditable) {
-      setEditing(false)
-    } else {
-      handleAddNewTag()
+  const handleFieldSelection = (val) => {
+    fieldInputRef.current.blur()
+    handleFieldChange(val)
+    if (stayEditable) {
+      operatorInputRef.current.focus()
+    }
+  }
+
+  const handleOperatorSelection = (val) => {
+    operatorInputRef.current.blur()
+    handleOperatorChange(val)
+    if (stayEditable) {
+      valueInputRef.current.focus()
+    }
+  }
+
+  const handleValueSelection = (val) => {
+    valueInputRef.current.blur()
+    handleValueChange(val)
+    if (stayEditable) {
+      handleTagFinish()
       fieldInputRef.current.focus()
     }
   }
 
-  const handleSubTagFinish = () => {
-    if (currentSubTag === FIELD_SUBTAG) {
-      operatorInputRef.current.focus()
-    } else if (currentSubTag === OPERATOR_SUBTAG) {
-      valueInputRef.current.focus()
-    } else if (currentSubTag === VALUE_SUBTAG) {
-      valueInputRef.current.blur()
-      handleTagFinish()
-    }
-  }
-
-  const handleClickOutside = () => {
+  const handleTagFinish = () => {
     if (!stayEditable) {
       setEditing(false)
     } else if (stayEditable && (field || operator || value)) {
@@ -64,7 +65,7 @@ export function Tag(
   }
 
   return (
-    <ClickAwayListener onClickAway={() => handleClickOutside()}>
+    <ClickAwayListener onClickAway={handleTagFinish}>
       <div className={className} onFocus={() => setEditing(true)} {...divProps}>
         <SubTag
           ref={fieldInputRef}
@@ -72,8 +73,7 @@ export function Tag(
           value={field}
           active={editing}
           handleChange={handleFieldChange}
-          handleSelectionFinish={handleSubTagFinish}
-          setCurrentSubTag={() => setCurrentSubTag(FIELD_SUBTAG)}
+          handleSelection={handleFieldSelection}
         />
         <SubTag
           ref={operatorInputRef}
@@ -81,8 +81,7 @@ export function Tag(
           active={editing}
           value={operator}
           handleChange={handleOperatorChange}
-          handleSelectionFinish={handleSubTagFinish}
-          setCurrentSubTag={() => setCurrentSubTag(OPERATOR_SUBTAG)}
+          handleSelection={handleOperatorSelection}
         />
         <SubTag
           ref={valueInputRef}
@@ -90,8 +89,7 @@ export function Tag(
           value={value}
           active={editing}
           handleChange={handleValueChange}
-          handleSelectionFinish={handleSubTagFinish}
-          setCurrentSubTag={() => setCurrentSubTag(VALUE_SUBTAG)}
+          handleSelection={handleValueSelection}
         />
         {handleDelete && <span className={styles.delete} onClick={() => handleDelete()}>x</span>}
       </div>

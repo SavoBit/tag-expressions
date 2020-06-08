@@ -9,7 +9,7 @@ function SubtagComp(
     value,
     active,
     handleChange,
-    handleSelectionFinish,
+    handleSelection,
     setCurrentSubTag
   }, ref) {
   const [open, setOpen] = useState(false)
@@ -43,7 +43,7 @@ function SubtagComp(
                 key={i}
                 className={styles.option}
                 onMouseDown={(e) => { e.preventDefault() }}
-                onMouseUp={() => { handleChange(option); handleSelectionFinish() }}
+                onMouseUp={() => {handleSelection(option)}}
               >
                 {option}
               </div>)
@@ -59,7 +59,7 @@ SubtagComp.prototype = {
   value: Proptypes.string,
   active: Proptypes.string,
   handleChange: Proptypes.func,
-  handleSelectionFinish: Proptypes.func,
+  handleSelection: Proptypes.func,
   setCurrentSubTag: Proptypes.func,
 }
 
