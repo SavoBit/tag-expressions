@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { ClickAwayListener } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import { Subtag } from './SubTag'
+import { SubTag } from './SubTag'
 import styles from './Tag.module.css'
 
 const supportedOperator = ['==', '!=', '>', '<']
@@ -25,13 +25,17 @@ export function Tag(
   }) {
   const [editing, setEditing] = useState(!!stayEditable)
   const [currentSubTag, setCurrentSubTag] = useState(FIELD_SUBTAG)
+  const fieldInputRef = useRef(null)
+  const operatorInputRef = useRef(null)
+  const valueInputRef = useRef(null)
 
-  // const handleSelectionFinish = () => {
-  //   if (currentSubtag <= 1) {
-  //     //focus next
-  //     // update current sub tag
-  //   }
-  // }
+  const handleSelectionFinish = () => {
+    if (currentSubTag === FIELD_SUBTAG) {
+      operatorInputRef.current.focus()
+    } else if (currentSubTag === OPERATOR_SUBTAG) {
+      valueInputRef.current.focus()
+    }
+  }
 
   let className = styles.Tag
   if (!editing) {
@@ -41,26 +45,32 @@ export function Tag(
   return (
     <ClickAwayListener onClickAway={() => { if (!stayEditable) { setEditing(false) } }}>
       <div className={className} onFocus={() => setEditing(true)} {...divProps}>
-        <Subtag
+        <SubTag
+          ref={fieldInputRef}
           options={fields}
           value={field}
           active={editing}
           handleChange={handleFieldChange}
-          // setCurrentSubTag={setCurrentSubTag(FIELD_SUBTAG)}
+          handleSelectionFinish={handleSelectionFinish}
+          setCurrentSubTag={() => setCurrentSubTag(FIELD_SUBTAG)}
         />
-        <Subtag
+        <SubTag
+          ref={operatorInputRef}
           options={supportedOperator}
           active={editing}
           value={operator}
           handleChange={handleOperatorChange}
-          // setCurrentSubTag={setCurrentSubTag(OPERATOR_SUBTAG)}
+          handleSelectionFinish={handleSelectionFinish}
+          setCurrentSubTag={() => setCurrentSubTag(OPERATOR_SUBTAG)}
         />
-        <Subtag
+        <SubTag
+          ref={valueInputRef}
           options={values}
           value={value}
           active={editing}
           handleChange={handleValueChange}
-          // setCurrentSubTag={setCurrentSubTag(VALUE_SUBTAG)}
+          handleSelectionFinish={handleSelectionFinish}
+          setCurrentSubTag={() => setCurrentSubTag(VALUE_SUBTAG)}
         />
         {handleDelete && <span className={styles.delete} onClick={() => handleDelete()}>x</span>}
       </div>

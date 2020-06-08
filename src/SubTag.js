@@ -3,7 +3,15 @@ import Proptypes from 'prop-types'
 import styles from './Subtag.module.css'
 import { Popper, Paper } from '@material-ui/core'
 
-export function Subtag({ options = [], value, active, handleChange, setCurrentSubTag }) {
+function SubtagComp(
+  {
+    options = [],
+    value,
+    active,
+    handleChange,
+    handleSelectionFinish,
+    setCurrentSubTag
+  }, ref) {
   const [open, setOpen] = useState(false)
   const anchorRef = useRef(null)
   let className = styles.input
@@ -13,13 +21,12 @@ export function Subtag({ options = [], value, active, handleChange, setCurrentSu
   return (
     <div className={styles.AutoGrowInput} ref={anchorRef}>
       <input
-        // ref={ref}
+        ref={ref}
         className={className}
         value={value}
         type='text'
         onChange={e => { handleChange(e.target.value) }}
-        // onFocus={() => { setOpen(true); setCurrentSubTag() }}
-        onFocus={() => { setOpen(true) }}
+        onFocus={() => { setOpen(true); setCurrentSubTag() }}
         onBlur={() => setOpen(false)}
         size={3}
       />
@@ -36,7 +43,7 @@ export function Subtag({ options = [], value, active, handleChange, setCurrentSu
                 key={i}
                 className={styles.option}
                 onMouseDown={(e) => { e.preventDefault() }}
-                onMouseUp={() => { handleChange(option) }}
+                onMouseUp={() => { handleChange(option); handleSelectionFinish() }}
               >
                 {option}
               </div>)
@@ -47,12 +54,13 @@ export function Subtag({ options = [], value, active, handleChange, setCurrentSu
   )
 }
 
-Subtag.prototype = {
+SubtagComp.prototype = {
   options: Proptypes.arrayOf(Proptypes.string),
   value: Proptypes.string,
   active: Proptypes.string,
   handleChange: Proptypes.func,
+  handleSelectionFinish: Proptypes.func,
   setCurrentSubTag: Proptypes.func,
 }
 
-// export React.forwardRef()
+export const SubTag = React.forwardRef(SubtagComp)
