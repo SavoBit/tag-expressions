@@ -1,0 +1,13 @@
+.Tag {
+    display: inline-flex;
+    margin: 0 8px;
+}
+
+.delete {
+    cursor: pointer;
+}
+
+.token {
+    border: 1px solid #F00;
+    border-radius: 4px;
+}
