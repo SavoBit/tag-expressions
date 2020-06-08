@@ -26,7 +26,7 @@ function SubtagComp(
         value={value}
         type='text'
         onChange={e => { handleChange(e.target.value) }}
-        onFocus={() => { setOpen(true); setCurrentSubTag() }}
+        onFocus={() => { setOpen(true); setCurrentSubTag && setCurrentSubTag() }}
         onBlur={() => setOpen(false)}
         size={3}
       />

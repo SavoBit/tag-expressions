@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { ClickAwayListener } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { SubTag } from './SubTag'
@@ -11,6 +11,7 @@ const VALUE_SUBTAG = 'VALUE'
 
 export function Tag(
   {
+    stayEditable,
     fields,
     values,
     field,
@@ -20,7 +21,7 @@ export function Tag(
     handleOperatorChange,
     handleValueChange,
     handleDelete,
-    stayEditable,
+    handleAddNewTag,
     ...divProps
   }) {
   const [editing, setEditing] = useState(!!stayEditable)
@@ -29,11 +30,31 @@ export function Tag(
   const operatorInputRef = useRef(null)
   const valueInputRef = useRef(null)
 
-  const handleSelectionFinish = () => {
+  const handleTagFinish = () => {
+    if (!stayEditable) {
+      setEditing(false)
+    } else {
+      handleAddNewTag()
+      fieldInputRef.current.focus()
+    }
+  }
+
+  const handleSubTagFinish = () => {
     if (currentSubTag === FIELD_SUBTAG) {
       operatorInputRef.current.focus()
     } else if (currentSubTag === OPERATOR_SUBTAG) {
       valueInputRef.current.focus()
+    } else if (currentSubTag === VALUE_SUBTAG) {
+      valueInputRef.current.blur()
+      handleTagFinish()
+    }
+  }
+
+  const handleClickOutside = () => {
+    if (!stayEditable) {
+      setEditing(false)
+    } else if (stayEditable && (field || operator || value)) {
+      handleAddNewTag()
     }
   }
 
@@ -43,7 +64,7 @@ export function Tag(
   }
 
   return (
-    <ClickAwayListener onClickAway={() => { if (!stayEditable) { setEditing(false) } }}>
+    <ClickAwayListener onClickAway={() => handleClickOutside()}>
       <div className={className} onFocus={() => setEditing(true)} {...divProps}>
         <SubTag
           ref={fieldInputRef}
@@ -51,7 +72,7 @@ export function Tag(
           value={field}
           active={editing}
           handleChange={handleFieldChange}
-          handleSelectionFinish={handleSelectionFinish}
+          handleSelectionFinish={handleSubTagFinish}
           setCurrentSubTag={() => setCurrentSubTag(FIELD_SUBTAG)}
         />
         <SubTag
@@ -60,7 +81,7 @@ export function Tag(
           active={editing}
           value={operator}
           handleChange={handleOperatorChange}
-          handleSelectionFinish={handleSelectionFinish}
+          handleSelectionFinish={handleSubTagFinish}
           setCurrentSubTag={() => setCurrentSubTag(OPERATOR_SUBTAG)}
         />
         <SubTag
@@ -69,7 +90,7 @@ export function Tag(
           value={value}
           active={editing}
           handleChange={handleValueChange}
-          handleSelectionFinish={handleSelectionFinish}
+          handleSelectionFinish={handleSubTagFinish}
           setCurrentSubTag={() => setCurrentSubTag(VALUE_SUBTAG)}
         />
         {handleDelete && <span className={styles.delete} onClick={() => handleDelete()}>x</span>}
@@ -89,4 +110,5 @@ Tag.prototype = {
   handleOperatorChange: PropTypes.func,
   handleValueChange: PropTypes.func,
   handleDelete: PropTypes.func,
+  handleAddNewTag: PropTypes.func,
 }
