@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
-import { ClickAwayListener } from '@material-ui/core'
 import PropTypes from 'prop-types'
+import { ClickAwayListener } from '@material-ui/core'
 import { SubTag } from './SubTag'
 import styles from './Tag.module.css'
 

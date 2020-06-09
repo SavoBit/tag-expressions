@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import Proptypes from 'prop-types'
-import styles from './Subtag.module.css'
 import { Popper, Paper } from '@material-ui/core'
+import styles from './Subtag.module.css'
 
 function SubtagComp(
   {
@@ -26,7 +26,7 @@ function SubtagComp(
         value={value}
         type='text'
         onChange={e => { handleChange(e.target.value) }}
-        onFocus={() => { setOpen(true); setCurrentSubTag && setCurrentSubTag() }}
+        onFocus={() => { setOpen(true) }}
         onBlur={() => setOpen(false)}
         size={3}
       />
@@ -43,7 +43,7 @@ function SubtagComp(
                 key={i}
                 className={styles.option}
                 onMouseDown={(e) => { e.preventDefault() }}
-                onMouseUp={() => {handleSelection(option)}}
+                onMouseUp={() => { handleSelection(option) }}
               >
                 {option}
               </div>)
@@ -60,7 +60,6 @@ SubtagComp.prototype = {
   active: Proptypes.string,
   handleChange: Proptypes.func,
   handleSelection: Proptypes.func,
-  setCurrentSubTag: Proptypes.func,
 }
 
 export const SubTag = React.forwardRef(SubtagComp)

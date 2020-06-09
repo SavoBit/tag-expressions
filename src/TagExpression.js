@@ -1,10 +1,11 @@
 import React, { useReducer } from 'react'
 import PropTypes from 'prop-types'
 import { Tag } from './Tag'
-import styles from './TagExpression.module.css'
 import { NewTag } from './NewTag'
+import styles from './TagExpression.module.css'
 
 const initialState = {
+  accepting: 'cond',
   tags: { allIds: [], byId: {} },
   newTag: { field: '', operator: '', value: '' }
 }
@@ -12,7 +13,7 @@ const initialState = {
 function reducer(state, action) {
   const value = action?.value
   const id = action?.id
-  const { tags: { allIds, byId }, newTag } = state;
+  const { tags: { allIds, byId }, newTag, accepting } = state;
 
   switch (action.type) {
     case 'update-new-field':
@@ -23,6 +24,8 @@ function reducer(state, action) {
       return { ...state, newTag: { ...newTag, value: value } }
     case 'add-new-tag':
       return {
+        ...state,
+        accepting: accepting === 'cond' ? 'op' : 'cond',
         tags: { allIds: [...allIds, id], byId: { ...byId, [id]: { id, ...newTag } } },
         newTag: { field: '', operator: '', value: '' }
       }
@@ -77,7 +80,7 @@ export function TagExpression({ fields, values }) {
         allIds.map(tagId => {
           const tag = byId[tagId]
           return (
-            < Tag
+            <Tag
               key={tag.id}
               fields={fields}
               values={values}
