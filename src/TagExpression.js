@@ -10,12 +10,10 @@ const initialState = {
   accepting: 'cond',
   cnt: 11,
   tags: {
-    allIds: [1, 2, 3, 4, 5], byId: {
+    allIds: [1, 2, 3], byId: {
       1: { id: 1, type: 'cond', field: '1', operator: '2', value: '3' },
       2: { id: 2, type: 'op', value: 'AND' },
       3: { id: 3, type: 'cond', field: '1', operator: '2', value: '3' },
-      4: { id: 4, type: 'op', value: 'AND' },
-      5: { id: 5, type: 'cond', field: '1', operator: '2', value: '3' },
     }
   },
   newTag: { field: '', operator: '', value: '' },
