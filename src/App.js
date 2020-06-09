@@ -8,6 +8,7 @@ function App() {
       <div className="content">
         <TagExpression
           fields={['name', 'age', 'gender']}
+          operators={['==', '!=']}
           values={['1', '2', '3']}
           ops={['AND', 'OR']}
         />

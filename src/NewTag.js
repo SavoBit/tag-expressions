@@ -5,6 +5,7 @@ import { Tag } from './Tag'
 export function NewTag(
   {
     fields,
+    operators,
     values,
     field,
     value,
@@ -20,6 +21,7 @@ export function NewTag(
   return (
     <Tag
       fields={fields}
+      operators={operators}
       values={values}
       field={field}
       operator={operator}
@@ -35,6 +37,7 @@ export function NewTag(
 
 NewTag.prototype = {
   fields: PropTypes.arrayOf(PropTypes.string),
+  operators: PropTypes.arrayOf(PropTypes.string),
   values: PropTypes.arrayOf(PropTypes.string),
   field: PropTypes.string,
   value: PropTypes.string,

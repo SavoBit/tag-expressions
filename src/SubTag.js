@@ -10,7 +10,6 @@ function SubtagComp(
     active,
     handleChange,
     handleSelection,
-    setCurrentSubTag
   }, ref) {
   const [open, setOpen] = useState(false)
   const anchorRef = useRef(null)
@@ -26,7 +25,7 @@ function SubtagComp(
         value={value}
         type='text'
         onChange={e => { handleChange(e.target.value) }}
-        onFocus={() => { setOpen(true) }}
+        onFocus={() => { setOpen(true); console.log('open', options) }}
         onBlur={() => setOpen(false)}
         size={3}
       />

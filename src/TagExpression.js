@@ -98,12 +98,11 @@ function reducer(state, action) {
   }
 }
 
-export function TagExpression({ fields, values, ops }) {
+export function TagExpression({ fields, operators, values, ops }) {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { tags: { allIds, byId }, newTag, newOp } = state;
   const lastTagId = allIds.slice(-1)[0]
   const lastTagType = lastTagId ? byId[lastTagId]?.type : 'tag'
-  console.log(lastTagType)
 
   return (
     <div className={styles.TagExpression}>
@@ -115,6 +114,7 @@ export function TagExpression({ fields, values, ops }) {
               <Tag
                 key={tag.id}
                 fields={fields}
+                operators={operators}
                 values={values}
                 field={tag.field}
                 operator={tag.operator}
@@ -143,6 +143,7 @@ export function TagExpression({ fields, values, ops }) {
         lastTagType === 'op' ?
           <NewTag
             fields={fields}
+            operators={operators}
             values={values}
             dispatch={dispatch}
             field={newTag.field}
@@ -161,6 +162,7 @@ export function TagExpression({ fields, values, ops }) {
 
 TagExpression.prototype = {
   fields: PropTypes.arrayOf(PropTypes.string),
+  operators: PropTypes.arrayOf(PropTypes.string),
   values: PropTypes.arrayOf(PropTypes.string),
   ops: PropTypes.arrayOf(PropTypes.string)
 }

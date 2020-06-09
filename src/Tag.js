@@ -4,12 +4,11 @@ import { ClickAwayListener } from '@material-ui/core'
 import { SubTag } from './SubTag'
 import styles from './Tag.module.css'
 
-const supportedOperator = ['==', '!=', '>', '<']
-
 export function Tag(
   {
     stayEditable,
     fields,
+    operators,
     values,
     field,
     value,
@@ -79,7 +78,7 @@ export function Tag(
         />
         <SubTag
           ref={operatorInputRef}
-          options={supportedOperator}
+          options={operators}
           active={editing}
           value={operator}
           handleChange={handleOperatorChange}
@@ -101,6 +100,7 @@ export function Tag(
 
 Tag.prototype = {
   fields: PropTypes.arrayOf(PropTypes.string),
+  operators: PropTypes.arrayOf(PropTypes.string),
   values: PropTypes.arrayOf(PropTypes.string),
   field: PropTypes.string,
   value: PropTypes.string,
