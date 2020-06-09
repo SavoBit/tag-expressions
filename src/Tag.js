@@ -31,6 +31,8 @@ export function Tag(
     handleFieldChange(val)
     if (stayEditable) {
       operatorInputRef.current.focus()
+    } else {
+      handleTagFinish()
     }
   }
 
@@ -39,18 +41,16 @@ export function Tag(
     handleOperatorChange(val)
     if (stayEditable) {
       valueInputRef.current.focus()
+    } else {
+      handleTagFinish()
     }
+
   }
 
   const handleValueSelection = (val) => {
     valueInputRef.current.blur()
     handleValueChange(val)
-    if (stayEditable) {
-      handleTagFinish()
-    }
-    if (field && operator) {
-      fieldInputRef.current.focus()
-    }
+    handleTagFinish()
   }
 
   const handleTagFinish = () => {
