@@ -47,6 +47,8 @@ export function Tag(
     handleValueChange(val)
     if (stayEditable) {
       handleTagFinish()
+    }
+    if (field && operator) {
       fieldInputRef.current.focus()
     }
   }
@@ -93,7 +95,7 @@ export function Tag(
         />
         {handleDelete && <span className={styles.delete} onClick={() => handleDelete()}>x</span>}
       </div>
-    </ClickAwayListener >
+    </ClickAwayListener>
   )
 }
 
