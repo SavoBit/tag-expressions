@@ -7,7 +7,6 @@ import { OpTag } from './OpTag'
 import { NewOpTag } from './NewOpTag'
 
 const initialState = {
-  accepting: 'cond',
   cnt: 11,
   tags: {
     allIds: [1, 2, 3], byId: {
@@ -37,7 +36,6 @@ function reducer(state, action) {
     case 'add-new-tag':
       return {
         ...state,
-        accepting: 'op',
         tags: { allIds: [...allIds, cnt], byId: { ...byId, [cnt]: { type: 'cond', id: cnt, ...newTag } } },
         newTag: { field: '', operator: '', value: '' },
         cnt: cnt + 1
@@ -69,7 +67,6 @@ function reducer(state, action) {
     case 'add-new-op':
       return {
         ...state,
-        accepting: 'tag',
         tags: { allIds: [...allIds, cnt], byId: { ...byId, [cnt]: { type: 'op', id: cnt, ...newOp } } },
         newOp: { value: '' },
         cnt: cnt + 1
@@ -105,8 +102,10 @@ function reducer(state, action) {
 
 export function TagExpression({ fields, values }) {
   const [state, dispatch] = useReducer(reducer, initialState)
-  const { tags: { allIds, byId }, newTag, newOp, accepting } = state;
-  console.log(state)
+  const { tags: { allIds, byId }, newTag, newOp } = state;
+  const lastTagId = allIds.slice(-1)[0]
+  const lastTagType = lastTagId ? byId[lastTagId]?.type : 'tag'
+  console.log(lastTagType)
 
   return (
     <div className={styles.TagExpression}>
@@ -135,6 +134,7 @@ export function TagExpression({ fields, values }) {
                 options={ops}
                 value={tag.value}
                 handleChange={(val) => dispatch({ type: 'update-op', id: tagId, value: val })}
+                handleDelete={() => dispatch({ type: 'delete-tag', id: tagId })}
               />
             )
           }
@@ -142,7 +142,7 @@ export function TagExpression({ fields, values }) {
         })
       }
       {
-        accepting === 'tag' ?
+        lastTagType === 'op' ?
           <NewTag
             fields={fields}
             values={values}
