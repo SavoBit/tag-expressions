@@ -19,8 +19,6 @@ const initialState = {
   newOp: { value: '' }
 }
 
-const ops = ['AND', 'OR']
-
 function reducer(state, action) {
   const value = action?.value
   const id = action?.id
@@ -100,7 +98,7 @@ function reducer(state, action) {
   }
 }
 
-export function TagExpression({ fields, values }) {
+export function TagExpression({ fields, values, ops }) {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { tags: { allIds, byId }, newTag, newOp } = state;
   const lastTagId = allIds.slice(-1)[0]
@@ -163,5 +161,6 @@ export function TagExpression({ fields, values }) {
 
 TagExpression.prototype = {
   fields: PropTypes.arrayOf(PropTypes.string),
-  values: PropTypes.arrayOf(PropTypes.string)
+  values: PropTypes.arrayOf(PropTypes.string),
+  ops: PropTypes.arrayOf(PropTypes.string)
 }

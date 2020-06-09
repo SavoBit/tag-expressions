@@ -9,6 +9,7 @@ function App() {
         <TagExpression
           fields={['name', 'age', 'gender']}
           values={['1', '2', '3']}
+          ops={['AND', 'OR']}
         />
 
       </div>
