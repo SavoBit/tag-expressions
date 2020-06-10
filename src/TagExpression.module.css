@@ -1,6 +1,7 @@
 .TagExpression {
     display: inline-flex;
     justify-content: flex-start;
+    flex-wrap: wrap;
     width: 100%;
     height: 24px;
     padding: 8px;

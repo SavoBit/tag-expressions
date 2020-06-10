@@ -4,6 +4,7 @@ import { Tag } from './Tag'
 
 export function NewTag(
   {
+    autofocus,
     fields,
     operators,
     values,
@@ -20,13 +21,14 @@ export function NewTag(
 
   return (
     <Tag
+      newTag
+      autofocus={autofocus}
       fields={fields}
       operators={operators}
       values={values}
       field={field}
       operator={operator}
       value={value}
-      stayEditable={true}
       handleFieldChange={handleFieldChange}
       handleOperatorChange={handleOperatorChange}
       handleValueChange={handleValueChange}
@@ -39,6 +41,7 @@ NewTag.prototype = {
   fields: PropTypes.arrayOf(PropTypes.string),
   operators: PropTypes.arrayOf(PropTypes.string),
   values: PropTypes.arrayOf(PropTypes.string),
+  autofocus: PropTypes.bool,
   field: PropTypes.string,
   value: PropTypes.string,
   operator: PropTypes.string,

@@ -4,6 +4,7 @@ import { OpTag } from './OpTag'
 
 export function NewOpTag(
   {
+    autofocus,
     options,
     value,
     dispatch,
@@ -15,6 +16,7 @@ export function NewOpTag(
   return (
     <OpTag
       newTag
+      autofocus={autofocus}
       value={value}
       options={options}
       handleChange={handleChange}
@@ -24,6 +26,7 @@ export function NewOpTag(
 }
 
 NewOpTag.prototype = {
+  autofocus: PropTypes.bool,
   options: PropTypes.arrayOf(PropTypes.string),
   value: PropTypes.string,
   dispatch: PropTypes.func,

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { ClickAwayListener } from '@material-ui/core'
 import { SubTag } from './SubTag'
@@ -6,7 +6,8 @@ import styles from './Tag.module.css'
 
 export function Tag(
   {
-    stayEditable,
+    autofocus,
+    newTag,
     fields,
     operators,
     values,
@@ -20,15 +21,21 @@ export function Tag(
     handleAddNewTag,
     ...divProps
   }) {
-  const [editing, setEditing] = useState(!!stayEditable)
+  const [editing, setEditing] = useState(!!newTag)
   const fieldInputRef = useRef(null)
   const operatorInputRef = useRef(null)
   const valueInputRef = useRef(null)
 
+  useEffect(() => {
+    if (autofocus) {
+      fieldInputRef.current.focus()
+    }
+  }, [autofocus])
+
   const handleFieldSelection = (val) => {
     fieldInputRef.current.blur()
     handleFieldChange(val)
-    if (stayEditable) {
+    if (newTag) {
       operatorInputRef.current.focus()
     } else {
       handleTagFinish()
@@ -38,7 +45,7 @@ export function Tag(
   const handleOperatorSelection = (val) => {
     operatorInputRef.current.blur()
     handleOperatorChange(val)
-    if (stayEditable) {
+    if (newTag) {
       valueInputRef.current.focus()
     } else {
       handleTagFinish()
@@ -53,9 +60,9 @@ export function Tag(
   }
 
   const handleTagFinish = () => {
-    if (!stayEditable) {
+    if (!newTag) {
       setEditing(false)
-    } else if (stayEditable && (field || operator || value)) {
+    } else if (newTag && (field || operator || value)) {
       handleAddNewTag()
     }
   }
@@ -99,12 +106,13 @@ export function Tag(
 }
 
 Tag.prototype = {
+  autofocus: PropTypes.bool,
   fields: PropTypes.arrayOf(PropTypes.string),
   operators: PropTypes.arrayOf(PropTypes.string),
   values: PropTypes.arrayOf(PropTypes.string),
   field: PropTypes.string,
   value: PropTypes.string,
-  stayEditable: PropTypes.bool,
+  newTag: PropTypes.bool,
   operator: PropTypes.string,
   handleFieldChange: PropTypes.func,
   handleOperatorChange: PropTypes.func,

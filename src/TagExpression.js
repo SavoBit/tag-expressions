@@ -16,7 +16,8 @@ const initialState = {
     }
   },
   newTag: { field: '', operator: '', value: '' },
-  newOp: { value: '' }
+  newOp: { value: '' },
+  autofocus: false,
 }
 
 function reducer(state, action) {
@@ -36,6 +37,7 @@ function reducer(state, action) {
         ...state,
         tags: { allIds: [...allIds, cnt], byId: { ...byId, [cnt]: { type: 'cond', id: cnt, ...newTag } } },
         newTag: { field: '', operator: '', value: '' },
+        autofocus: true,
         cnt: cnt + 1
       }
     case 'update-tag-field':
@@ -67,6 +69,7 @@ function reducer(state, action) {
         ...state,
         tags: { allIds: [...allIds, cnt], byId: { ...byId, [cnt]: { type: 'op', id: cnt, ...newOp } } },
         newOp: { value: '' },
+        autofocus: true,
         cnt: cnt + 1
       }
     case 'update-new-op':
@@ -100,7 +103,7 @@ function reducer(state, action) {
 
 export function TagExpression({ fields, operators, values, ops }) {
   const [state, dispatch] = useReducer(reducer, initialState)
-  const { tags: { allIds, byId }, newTag, newOp } = state;
+  const { tags: { allIds, byId }, newTag, newOp, autofocus } = state;
   const lastTagId = allIds.slice(-1)[0]
   const lastTagType = lastTagId ? byId[lastTagId]?.type : 'tag'
 
@@ -142,6 +145,7 @@ export function TagExpression({ fields, operators, values, ops }) {
       {
         lastTagType === 'op' ?
           <NewTag
+            autofocus={autofocus}
             fields={fields}
             operators={operators}
             values={values}
@@ -151,6 +155,7 @@ export function TagExpression({ fields, operators, values, ops }) {
             value={newTag.value}
           /> :
           <NewOpTag
+            autofocus={autofocus}
             options={ops}
             value={newOp.value}
             dispatch={dispatch}
