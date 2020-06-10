@@ -143,7 +143,13 @@ export function TagExpression({ fields, operators, values, ops }) {
         })
       }
       {
-        lastTagType === 'op' ?
+        lastTagType === 'cond' ?
+          <NewOpTag
+            autofocus={autofocus}
+            options={ops}
+            value={newOp.value}
+            dispatch={dispatch}
+          /> :
           <NewTag
             autofocus={autofocus}
             fields={fields}
@@ -153,12 +159,6 @@ export function TagExpression({ fields, operators, values, ops }) {
             field={newTag.field}
             operator={newTag.operator}
             value={newTag.value}
-          /> :
-          <NewOpTag
-            autofocus={autofocus}
-            options={ops}
-            value={newOp.value}
-            dispatch={dispatch}
           />
       }
     </div>

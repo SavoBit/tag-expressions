@@ -1,6 +1,7 @@
 .Tag {
     display: inline-flex;
     margin: 0 8px;
+    height: 24px;
 }
 
 .delete {
@@ -10,5 +11,4 @@
 .token {
     border: 1px solid #080;
     border-radius: 4px;
-    height: 100%;
 }

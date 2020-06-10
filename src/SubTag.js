@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import Proptypes from 'prop-types'
 import { Popper, Paper } from '@material-ui/core'
 import styles from './Subtag.module.css'
@@ -12,13 +12,12 @@ function SubtagComp(
     handleSelection,
   }, ref) {
   const [open, setOpen] = useState(false)
-  const anchorRef = useRef(null)
   let className = styles.input
   if (!active) {
     className += ` ${styles.idle}`
   }
   return (
-    <div className={styles.AutoGrowInput} ref={anchorRef}>
+    <div className={styles.AutoGrowInput} >
       <input
         ref={ref}
         className={className}
@@ -31,8 +30,7 @@ function SubtagComp(
       />
       <div className={styles.hidden}>{value}</div>
       <Popper
-        disablePortal
-        anchorEl={anchorRef.current}
+        anchorEl={ref.current}
         open={open}
       >
         <Paper>
