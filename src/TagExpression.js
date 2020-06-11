@@ -1,29 +1,31 @@
 import React, { useReducer } from 'react'
 import PropTypes from 'prop-types'
-import { Tag } from './Tag'
-import { NewTag } from './NewTag'
+import { Condition } from './Condition'
+import { NewCondition } from './NewCondition'
 import styles from './TagExpression.module.css'
-import { OpTag } from './OpTag'
-import { NewOpTag } from './NewOpTag'
+import { Operator } from './Operator'
+import { NewOperator } from './NewOperator'
 
 const initialState = {
   cnt: 11,
   tags: {
-    allIds: [1, 2, 3], byId: {
-      1: { id: 1, type: 'cond', field: '1', operator: '2', value: '3' },
+    allIds: [1, 2, 3],
+    byId: {
+      1: { id: 1, type: 'cond', field: 'name', operator: '==', value: '3' },
       2: { id: 2, type: 'op', value: 'AND' },
-      3: { id: 3, type: 'cond', field: '1', operator: '2', value: '3' },
+      3: { id: 3, type: 'cond', field: 'age', operator: '!=', value: '1' },
     }
   },
   newTag: { field: '', operator: '', value: '' },
   newOp: { value: '' },
   autofocus: false,
+  selectedIndx: -1,
 }
 
 function reducer(state, action) {
   const value = action?.value
   const id = action?.id
-  const { tags: { allIds, byId }, newTag, newOp, cnt } = state;
+  const { tags: { allIds, byId }, newTag, newOp, cnt, selectedIndx } = state;
 
   switch (action.type) {
     case 'update-new-field':
@@ -93,7 +95,32 @@ function reducer(state, action) {
         tags: {
           allIds: allIds.filter(curr => curr !== id),
           byId: otherTags
-        }
+        },
+        autofocus: false,
+      }
+    }
+    case 'enable-select':
+      return {
+        ...state,
+        selectedIndx: allIds.length
+      }
+    case 'disable-select':
+      return {
+        ...state,
+        selectedIndx: -1
+      }
+    case 'select-left': {
+      const newIndx = Math.max(0, selectedIndx - 1)
+      return {
+        ...state,
+        selectedIndx: newIndx,
+      }
+    }
+    case 'select-right': {
+      const newIndx = Math.min(allIds.length, selectedIndx + 1)
+      return {
+        ...state,
+        selectedIndx: newIndx,
       }
     }
     default:
@@ -105,17 +132,42 @@ export function TagExpression({ fields, operators, values, ops }) {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { tags: { allIds, byId }, newTag, newOp, autofocus } = state;
   const lastTagId = allIds.slice(-1)[0]
-  const lastTagType = lastTagId ? byId[lastTagId]?.type : 'tag'
+  const lastTagType = lastTagId ? byId[lastTagId]?.type : 'cond'
+
+  // const handleKeyDown = (e) => {
+  //   console.log(e.key)
+  //   switch (e.key) {
+  //     case 'ArrowLeft':
+  //       if (selectedIndx >= 0 && selectedIndx <= allIds.length) {
+  //         dispatch({ type: 'select-left' })
+  //       }
+  //       break;
+  //     case 'ArrowRight':
+  //       if (selectedIndx >= 0 && selectedIndx <= allIds.length) {
+  //         dispatch({ type: 'select-right' })
+  //       }
+  //       break;
+  //     case 'Escape':
+  //       dispatch({ type: 'disable-select' })
+  //       break
+  //     default:
+  //       break;
+  //   }
+  // }
 
   return (
-    <div className={styles.TagExpression}>
+    <div
+      className={styles.TagExpression}
+    // onKeyDown={handleKeyDown}
+    >
       {
-        allIds.map(tagId => {
+        allIds.map((tagId, i) => {
           const tag = byId[tagId]
           if (tag.type === 'cond') {
             return (
-              <Tag
+              <Condition
                 key={tag.id}
+                // selected={i === selectedIndx}
                 fields={fields}
                 operators={operators}
                 values={values}
@@ -130,8 +182,9 @@ export function TagExpression({ fields, operators, values, ops }) {
             )
           } else {
             return (
-              <OpTag
+              <Operator
                 key={tag.id}
+                // selected={i === selectedIndx}
                 options={ops}
                 value={tag.value}
                 handleChange={(val) => dispatch({ type: 'update-op', id: tagId, value: val })}
@@ -142,26 +195,30 @@ export function TagExpression({ fields, operators, values, ops }) {
 
         })
       }
-      {
-        lastTagType === 'cond' ?
-          <NewOpTag
-            autofocus={autofocus}
-            options={ops}
-            value={newOp.value}
-            dispatch={dispatch}
-          /> :
-          <NewTag
-            autofocus={autofocus}
-            fields={fields}
-            operators={operators}
-            values={values}
-            dispatch={dispatch}
-            field={newTag.field}
-            operator={newTag.operator}
-            value={newTag.value}
-          />
-      }
-    </div>
+      <div onClick={() => dispatch({ type: 'enable-select' })} >
+        {
+          lastTagType === 'cond' ?
+            <NewOperator
+              autofocus={autofocus}
+              // selected={selectedIndx === allIds.length}
+              options={ops}
+              value={newOp.value}
+              dispatch={dispatch}
+            /> :
+            <NewCondition
+              autofocus={autofocus}
+              // selected={selectedIndx === allIds.length}
+              fields={fields}
+              operators={operators}
+              values={values}
+              dispatch={dispatch}
+              field={newTag.field}
+              operator={newTag.operator}
+              value={newTag.value}
+            />
+        }
+      </div>
+    </div >
   )
 }
 

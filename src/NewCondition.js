@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Tag } from './Tag'
+import { Condition } from './Condition'
 
-export function NewTag(
+export function NewCondition(
   {
     autofocus,
+    selected,
     fields,
     operators,
     values,
@@ -20,8 +21,9 @@ export function NewTag(
   const handleAddNewTag = () => { dispatch({ type: 'add-new-tag' }) }
 
   return (
-    <Tag
+    <Condition
       newTag
+      selected={selected}
       autofocus={autofocus}
       fields={fields}
       operators={operators}
@@ -37,11 +39,12 @@ export function NewTag(
   )
 }
 
-NewTag.prototype = {
+NewCondition.prototype = {
   fields: PropTypes.arrayOf(PropTypes.string),
   operators: PropTypes.arrayOf(PropTypes.string),
   values: PropTypes.arrayOf(PropTypes.string),
   autofocus: PropTypes.bool,
+  selected: PropTypes.bool,
   field: PropTypes.string,
   value: PropTypes.string,
   operator: PropTypes.string,

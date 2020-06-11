@@ -6,3 +6,19 @@
     padding: 8px;
     border: 1px solid #000;
 }
+
+.Tag {
+    display: inline-flex;
+    margin: 0 8px;
+    height: 24px;
+}
+
+.delete {
+    cursor: pointer;
+}
+
+
+.selected {
+    border-color: rgb(253, 252, 153);
+    border-width: 3px;
+}

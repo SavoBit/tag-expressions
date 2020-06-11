@@ -1,12 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { ClickAwayListener } from '@material-ui/core'
-import { SubTag } from './SubTag'
-import styles from './Tag.module.css'
+import { Tag } from './Tag'
+import styles from './TagExpression.module.css'
 
-export function OpTag(
+export function Operator(
   {
     autofocus,
+    selected,
     newTag,
     options,
     value,
@@ -15,7 +16,6 @@ export function OpTag(
     handleAddNewTag,
     ...divProps
   }) {
-  const [editing, setEditing] = useState(!!newTag)
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -25,9 +25,7 @@ export function OpTag(
   }, [autofocus])
 
   const handleTagFinish = (shouldAdd) => {
-    if (!newTag) {
-      setEditing(false)
-    } else if (newTag && shouldAdd) {
+    if (newTag && shouldAdd) {
       handleAddNewTag()
     }
   }
@@ -39,18 +37,17 @@ export function OpTag(
   }
 
   let className = styles.Tag
-  if (!editing) {
-    className += ` ${styles.token}`
+  if (selected) {
+    className += ` ${styles.selected}`
   }
 
   return (
     <ClickAwayListener onClickAway={() => handleTagFinish(!!value)}>
-      <div className={className} onFocus={() => setEditing(true)} {...divProps}>
-        <SubTag
+      <div className={className} {...divProps}>
+        <Tag
           ref={inputRef}
           options={options}
           value={value}
-          active={editing}
           handleChange={handleChange}
           handleSelection={handleSelection}
         />
@@ -60,8 +57,9 @@ export function OpTag(
   )
 }
 
-OpTag.prototype = {
+Operator.prototype = {
   autofocus: PropTypes.bool,
+  selected: PropTypes.bool,
   options: PropTypes.arrayOf(PropTypes.string),
   value: PropTypes.string,
   newTag: PropTypes.bool,

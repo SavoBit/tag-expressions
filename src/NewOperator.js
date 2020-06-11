@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { OpTag } from './OpTag'
+import { Operator } from './Operator'
 
-export function NewOpTag(
+export function NewOperator(
   {
     autofocus,
     options,
@@ -14,7 +14,7 @@ export function NewOpTag(
   const handleAddNewTag = () => { dispatch({ type: 'add-new-op' }) }
 
   return (
-    <OpTag
+    <Operator
       newTag
       autofocus={autofocus}
       value={value}
@@ -25,7 +25,7 @@ export function NewOpTag(
   )
 }
 
-NewOpTag.prototype = {
+NewOperator.prototype = {
   autofocus: PropTypes.bool,
   options: PropTypes.arrayOf(PropTypes.string),
   value: PropTypes.string,

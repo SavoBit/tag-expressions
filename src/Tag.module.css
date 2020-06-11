@@ -1,14 +1,26 @@
-.Tag {
-    display: inline-flex;
-    margin: 0 8px;
-    height: 24px;
+.AutoGrowInput {
+    position: relative;
 }
 
-.delete {
-    cursor: pointer;
+.input {
+    box-sizing: border-box;
+    width: 100%;
 }
 
-.token {
+.idle {
+    border-width: 0;
+    border: none;
     border: 1px solid #080;
     border-radius: 4px;
+}
+
+.hidden {
+    padding: 0 4px;
+    font-size: 11px;
+    visibility: hidden;
+}
+
+.option:hover {
+    cursor: pointer;
+    background-color: azure;
 }
