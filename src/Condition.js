@@ -30,17 +30,18 @@ export function Condition(
 
   useEffect(() => {
     if (autofocus) {
+      console.log('auto focus')
       fieldInputRef.current.focus()
     }
   }, [autofocus])
 
-  useEffect(() => {
-    if (newTag && selected) {
-      fieldInputRef.current.focus()
-    } else if (newTag && !selected) {
-      fieldInputRef.current.blur()
-    }
-  }, [newTag, selected])
+  // useEffect(() => {
+  //   if (newTag && selected) {
+  //     fieldInputRef.current.focus()
+  //   } else if (newTag && !selected) {
+  //     fieldInputRef.current.blur()
+  //   }
+  // }, [newTag, selected])
 
   const handleFieldSelection = (val) => {
     fieldInputRef.current.blur()
@@ -77,15 +78,16 @@ export function Condition(
   }
 
   let className = styles.Tag
-  if (selected) {
-    className += ` ${styles.selected}`
-  }
+  // if (selected) {
+  //   className += ` ${styles.selected}`
+  // }
 
   return (
     <ClickAwayListener onClickAway={handleTagFinish}>
       <div className={className}  {...divProps}>
         <Tag
           ref={fieldInputRef}
+          newTag={newTag}
           options={fields}
           value={field}
           handleChange={handleFieldChange}
@@ -93,6 +95,7 @@ export function Condition(
         />
         <Tag
           ref={operatorInputRef}
+          newTag={newTag}
           options={operators}
           value={operator}
           handleChange={handleOperatorChange}
@@ -100,6 +103,7 @@ export function Condition(
         />
         <Tag
           ref={valueInputRef}
+          newTag={newTag}
           options={values}
           value={value}
           handleChange={handleValueChange}

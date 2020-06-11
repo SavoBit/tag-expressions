@@ -7,13 +7,14 @@ function TagComp(
   {
     options = [],
     value,
+    newTag,
     handleChange,
     handleSelection,
   }, ref) {
   const [active, setActive] = useState(false)
   let className = styles.input
 
-  if (!active) {
+  if (!active && !newTag) {
     className += ` ${styles.idle}`
   }
 
@@ -55,6 +56,7 @@ function TagComp(
 TagComp.prototype = {
   options: Proptypes.arrayOf(Proptypes.string),
   value: Proptypes.string,
+  newTag: Proptypes.bool,
   handleChange: Proptypes.func,
   handleSelection: Proptypes.func,
 }

@@ -46,6 +46,7 @@ export function Operator(
       <div className={className} {...divProps}>
         <Tag
           ref={inputRef}
+          newTag={newTag}
           options={options}
           value={value}
           handleChange={handleChange}
