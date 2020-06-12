@@ -6,8 +6,8 @@ import styles from './Tag.module.css'
 function TagComp(
   {
     options = [],
-    value,
     newTag,
+    value,
     handleChange,
     handleSelection,
   }, ref) {
@@ -55,8 +55,8 @@ function TagComp(
 
 TagComp.prototype = {
   options: Proptypes.arrayOf(Proptypes.string),
-  value: Proptypes.string,
   newTag: Proptypes.bool,
+  value: Proptypes.string,
   handleChange: Proptypes.func,
   handleSelection: Proptypes.func,
 }

@@ -17,7 +17,6 @@
     cursor: pointer;
 }
 
-
 .selected {
     border-color: rgb(253, 252, 153);
     border-width: 3px;

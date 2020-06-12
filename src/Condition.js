@@ -1,11 +1,9 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { ClickAwayListener } from '@material-ui/core'
+import { ClickAwayListener, Box } from '@material-ui/core'
 import { Tag } from './Tag'
 import styles from './TagExpression.module.css'
 
-// TODO
-// some similar logic between tag and optag can be wrapped in a custom hook
 export function Condition(
   {
     autofocus,
@@ -28,6 +26,12 @@ export function Condition(
   const operatorInputRef = useRef(null)
   const valueInputRef = useRef(null)
 
+  const [fieldInitialized, setFieldInitialized] = useState(false);
+  const [operatorInitialized, setOperatorInitialized] = useState(false);
+
+  const showOperatorInput = !newTag || fieldInitialized
+  const showValueInput = !newTag || operatorInitialized
+
   useEffect(() => {
     if (autofocus) {
       console.log('auto focus')
@@ -35,19 +39,21 @@ export function Condition(
     }
   }, [autofocus])
 
-  // useEffect(() => {
-  //   if (newTag && selected) {
-  //     fieldInputRef.current.focus()
-  //   } else if (newTag && !selected) {
-  //     fieldInputRef.current.blur()
-  //   }
-  // }, [newTag, selected])
+  useEffect(() => {
+    if (newTag && showValueInput)
+      valueInputRef.current.focus()
+  }, [newTag, showValueInput])
+
+  useEffect(() => {
+    if (newTag && showOperatorInput)
+      operatorInputRef.current.focus()
+  }, [newTag, showOperatorInput])
 
   const handleFieldSelection = (val) => {
     fieldInputRef.current.blur()
     handleFieldChange(val)
     if (newTag) {
-      operatorInputRef.current.focus()
+      setFieldInitialized(true)
     } else {
       handleTagFinish()
     }
@@ -57,7 +63,7 @@ export function Condition(
     operatorInputRef.current.blur()
     handleOperatorChange(val)
     if (newTag) {
-      valueInputRef.current.focus()
+      setOperatorInitialized(true)
     } else {
       handleTagFinish()
     }
@@ -77,41 +83,39 @@ export function Condition(
     }
   }
 
-  let className = styles.Tag
-  // if (selected) {
-  //   className += ` ${styles.selected}`
-  // }
 
   return (
     <ClickAwayListener onClickAway={handleTagFinish}>
-      <div className={className}  {...divProps}>
+      <div className={styles.Tag}  {...divProps}>
         <Tag
           ref={fieldInputRef}
-          newTag={newTag}
+          newTag={newTag && !field}
           options={fields}
           value={field}
           handleChange={handleFieldChange}
           handleSelection={handleFieldSelection}
         />
-        <Tag
-          ref={operatorInputRef}
-          newTag={newTag}
-          options={operators}
-          value={operator}
-          handleChange={handleOperatorChange}
-          handleSelection={handleOperatorSelection}
-        />
-        <Tag
-          ref={valueInputRef}
-          newTag={newTag}
-          options={values}
-          value={value}
-          handleChange={handleValueChange}
-          handleSelection={handleValueSelection}
-        />
+        <Box display={showOperatorInput ? 'block' : 'none'}>
+          <Tag
+            ref={operatorInputRef}
+            options={operators}
+            value={operator}
+            handleChange={handleOperatorChange}
+            handleSelection={handleOperatorSelection}
+          />
+        </Box>
+        <Box display={showValueInput ? 'block' : 'none'}>
+          <Tag
+            ref={valueInputRef}
+            options={values}
+            value={value}
+            handleChange={handleValueChange}
+            handleSelection={handleValueSelection}
+          />
+        </Box>
         {handleDelete && <span className={styles.delete} onClick={() => handleDelete()}>x</span>}
       </div>
-    </ClickAwayListener>
+    </ClickAwayListener >
   )
 }
 
