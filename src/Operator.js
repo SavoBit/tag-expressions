@@ -7,7 +7,6 @@ import styles from './TagExpression.module.css'
 export function Operator(
   {
     autofocus,
-    selected,
     newTag,
     options,
     value,
@@ -36,14 +35,9 @@ export function Operator(
     handleTagFinish(true)
   }
 
-  let className = styles.Tag
-  if (selected) {
-    className += ` ${styles.selected}`
-  }
-
   return (
     <ClickAwayListener onClickAway={() => handleTagFinish(!!value)}>
-      <div className={className} {...divProps}>
+      <div className={styles.Tag} {...divProps}>
         <Tag
           ref={inputRef}
           newTag={newTag && !value}
@@ -60,7 +54,6 @@ export function Operator(
 
 Operator.prototype = {
   autofocus: PropTypes.bool,
-  selected: PropTypes.bool,
   options: PropTypes.arrayOf(PropTypes.string),
   value: PropTypes.string,
   newTag: PropTypes.bool,

@@ -20,6 +20,10 @@
     visibility: hidden;
 }
 
+.highlight {
+    background-color: azure;
+}
+
 .option:hover {
     cursor: pointer;
     background-color: azure;

@@ -3,6 +3,23 @@ import Proptypes from 'prop-types'
 import { Popper, Paper } from '@material-ui/core'
 import styles from './Tag.module.css'
 
+function Option({ onSelection, highlight, children }) {
+  let className = styles.option
+  if (highlight) {
+    className += ` ${styles.highlight}`
+  }
+
+  return (
+    <div
+      className={className}
+      onMouseDown={(e) => { e.preventDefault() }}
+      onMouseUp={onSelection}
+    >
+      {children}
+    </div>
+  )
+}
+
 function TagComp(
   {
     options = [],
@@ -12,8 +29,38 @@ function TagComp(
     handleSelection,
   }, ref) {
   const [active, setActive] = useState(false)
-  let className = styles.input
+  const [selectedIndex, setSelectedIndex] = useState(undefined)
 
+  const handleKeyDown = (e) => {
+    const optionsLength = options.length
+    switch (e.key) {
+      case `ArrowUp`:
+        if (selectedIndex === undefined || selectedIndex === 0) {
+          setSelectedIndex(optionsLength - 1)
+        } else {
+          setSelectedIndex(selectedIndex - 1)
+        }
+        break
+      case 'ArrowDown':
+        if (selectedIndex === undefined || selectedIndex === optionsLength - 1) {
+          setSelectedIndex(0)
+        } else {
+          setSelectedIndex(selectedIndex + 1)
+        }
+        break
+      case 'Enter':
+        handleSelection(options[selectedIndex] ?? '')
+        setSelectedIndex(undefined)
+        break
+      case 'Escape':
+        ref.current.blur()
+        break
+      default:
+        break
+    }
+  }
+
+  let className = styles.input
   if (!active && !newTag) {
     className += ` ${styles.idle}`
   }
@@ -28,6 +75,7 @@ function TagComp(
         onChange={e => { handleChange(e.target.value) }}
         onFocus={() => { setActive(true) }}
         onBlur={() => { setActive(false) }}
+        onKeyDown={handleKeyDown}
         size={3}
       />
       <div className={styles.hidden}>{value}</div>
@@ -38,14 +86,13 @@ function TagComp(
         <Paper>
           {
             options.map((option, i) =>
-              <div
+              <Option
                 key={i}
-                className={styles.option}
-                onMouseDown={(e) => { e.preventDefault() }}
-                onMouseUp={() => { handleSelection(option) }}
+                highlight={i === selectedIndex}
+                onSelection={() => { handleSelection(option) }}
               >
                 {option}
-              </div>)
+              </Option>)
           }
         </Paper>
       </Popper>

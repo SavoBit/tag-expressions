@@ -118,7 +118,7 @@ function reducer(state, action) {
 
 export function TagExpression({ fields, operators, values, ops }) {
   const [state, dispatch] = useReducer(reducer, initialState)
-  const { tags: { allIds, byId }, newTag, newOp, autofocus, selectedIndx, selectedSubIndex } = state;
+  const { tags: { allIds, byId }, newTag, newOp, autofocus } = state;
   const lastTagId = allIds.slice(-1)[0]
   const lastTagType = lastTagId ? byId[lastTagId]?.type : 'cond'
 
@@ -131,7 +131,6 @@ export function TagExpression({ fields, operators, values, ops }) {
             return (
               <Condition
                 key={tag.id}
-                selectedItem={i === selectedIndx ? selectedSubIndex : -1}
                 fields={fields}
                 operators={operators}
                 values={values}
