@@ -20,14 +20,12 @@ const initialState = {
   newTag: { field: '', operator: '', value: '' },
   newOp: { value: '' },
   autofocus: false,
-  selectedIndx: -1,
-  selectedSubIndex: -1,
 }
 
 function reducer(state, action) {
   const value = action?.value
   const id = action?.id
-  const { tags: { allIds, byId }, newTag, newOp, cnt, selectedIndx, selectedSubIndex } = state;
+  const { tags: { allIds, byId }, newTag, newOp, cnt, } = state;
 
   switch (action.type) {
     case 'update-new-field':
@@ -113,59 +111,6 @@ function reducer(state, action) {
         autofocus: false,
       }
     }
-    case 'enable-select':
-      return {
-        ...state,
-        selectedIndx: allIds.length,
-        selectedSubIndex: 0,
-      }
-    case 'disable-select':
-      return {
-        ...state,
-        selectedIndx: -1,
-        selectedSubIndex: -1,
-      }
-    case 'select-left': {
-      let newSelectedIndex
-      let newSelectedSubIndex
-      if (selectedIndx === 0 && selectedSubIndex === 0) {
-        newSelectedIndex = 0
-        newSelectedSubIndex = 0
-      } else if (selectedSubIndex === 0) {
-        newSelectedIndex = selectedIndx - 1
-        const newSelectedItemId = allIds[newSelectedIndex]
-        newSelectedSubIndex = byId[newSelectedItemId].dataLength - 1
-      } else {
-        newSelectedIndex = selectedIndx
-        newSelectedSubIndex = selectedSubIndex - 1
-      }
-      console.log(newSelectedIndex, newSelectedSubIndex)
-      return {
-        ...state,
-        selectedIndx: newSelectedIndex,
-        selectedSubIndex: newSelectedSubIndex
-      }
-    }
-    case 'select-right': {
-      let newSelectedIndex
-      let newSelectedSubIndex
-      if (selectedIndx === allIds.length) {
-        newSelectedIndex = selectedIndx
-        newSelectedSubIndex = selectedSubIndex
-      } else if (selectedSubIndex === byId[allIds[selectedIndx]].dataLength - 1) {
-        newSelectedIndex = selectedIndx + 1
-        newSelectedSubIndex = 0
-      } else {
-        newSelectedIndex = selectedIndx
-        newSelectedSubIndex = selectedSubIndex + 1
-      }
-      console.log(newSelectedIndex, newSelectedSubIndex)
-      return {
-        ...state,
-        selectedIndx: newSelectedIndex,
-        selectedSubIndex: newSelectedSubIndex,
-      }
-    }
     default:
       return state
   }
@@ -177,32 +122,8 @@ export function TagExpression({ fields, operators, values, ops }) {
   const lastTagId = allIds.slice(-1)[0]
   const lastTagType = lastTagId ? byId[lastTagId]?.type : 'cond'
 
-  const handleKeyDown = (e) => {
-    console.log(e.key)
-    switch (e.key) {
-      case 'ArrowLeft':
-        if (selectedIndx >= 0 && selectedIndx <= allIds.length) {
-          dispatch({ type: 'select-left' })
-        }
-        break;
-      case 'ArrowRight':
-        if (selectedIndx >= 0 && selectedIndx <= allIds.length) {
-          dispatch({ type: 'select-right' })
-        }
-        break;
-      case 'Escape':
-        dispatch({ type: 'disable-select' })
-        break
-      default:
-        break;
-    }
-  }
-
   return (
-    <div
-      className={styles.TagExpression}
-      onKeyDown={handleKeyDown}
-    >
+    <div className={styles.TagExpression}>
       {
         allIds.map((tagId, i) => {
           const tag = byId[tagId]
