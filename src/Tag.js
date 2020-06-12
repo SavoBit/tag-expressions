@@ -85,7 +85,7 @@ function TagComp(
       >
         <Paper>
           {
-            options.map((option, i) =>
+            options.filter(option => option.toLowerCase().includes(value.toLowerCase())).map((option, i) =>
               <Option
                 key={i}
                 highlight={i === selectedIndex}
