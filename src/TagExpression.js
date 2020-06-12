@@ -5,27 +5,29 @@ import { NewCondition } from './NewCondition'
 import styles from './TagExpression.module.css'
 import { Operator } from './Operator'
 import { NewOperator } from './NewOperator'
+import { newCondition, newOperator } from './utils'
 
 const initialState = {
   cnt: 11,
   tags: {
     allIds: [1, 2, 3],
     byId: {
-      1: { id: 1, type: 'cond', field: 'name', operator: '==', value: '3' },
-      2: { id: 2, type: 'op', value: 'AND' },
-      3: { id: 3, type: 'cond', field: 'age', operator: '!=', value: '1' },
+      1: newCondition(1, 'name', '==', 'john'),
+      2: newOperator(2, 'AND'),
+      3: newCondition(3, 'age', '!=', '11'),
     }
   },
   newTag: { field: '', operator: '', value: '' },
   newOp: { value: '' },
   autofocus: false,
   selectedIndx: -1,
+  selectedSubIndex: -1,
 }
 
 function reducer(state, action) {
   const value = action?.value
   const id = action?.id
-  const { tags: { allIds, byId }, newTag, newOp, cnt, selectedIndx } = state;
+  const { tags: { allIds, byId }, newTag, newOp, cnt, selectedIndx, selectedSubIndex } = state;
 
   switch (action.type) {
     case 'update-new-field':
@@ -37,7 +39,13 @@ function reducer(state, action) {
     case 'add-new-tag':
       return {
         ...state,
-        tags: { allIds: [...allIds, cnt], byId: { ...byId, [cnt]: { type: 'cond', id: cnt, ...newTag } } },
+        tags: {
+          allIds: [...allIds, cnt],
+          byId: {
+            ...byId,
+            [cnt]: newCondition(cnt, newTag.field, newTag.operator, newTag.value)
+          }
+        },
         newTag: { field: '', operator: '', value: '' },
         autofocus: true,
         cnt: cnt + 1
@@ -69,7 +77,13 @@ function reducer(state, action) {
     case 'add-new-op':
       return {
         ...state,
-        tags: { allIds: [...allIds, cnt], byId: { ...byId, [cnt]: { type: 'op', id: cnt, ...newOp } } },
+        tags: {
+          allIds: [...allIds, cnt],
+          byId: {
+            ...byId,
+            [cnt]: newOperator(cnt, newOp.value)
+          }
+        },
         newOp: { value: '' },
         autofocus: true,
         cnt: cnt + 1
@@ -102,25 +116,54 @@ function reducer(state, action) {
     case 'enable-select':
       return {
         ...state,
-        selectedIndx: allIds.length
+        selectedIndx: allIds.length,
+        selectedSubIndex: 0,
       }
     case 'disable-select':
       return {
         ...state,
-        selectedIndx: -1
+        selectedIndx: -1,
+        selectedSubIndex: -1,
       }
     case 'select-left': {
-      const newIndx = Math.max(0, selectedIndx - 1)
+      let newSelectedIndex
+      let newSelectedSubIndex
+      if (selectedIndx === 0 && selectedSubIndex === 0) {
+        newSelectedIndex = 0
+        newSelectedSubIndex = 0
+      } else if (selectedSubIndex === 0) {
+        newSelectedIndex = selectedIndx - 1
+        const newSelectedItemId = allIds[newSelectedIndex]
+        newSelectedSubIndex = byId[newSelectedItemId].dataLength - 1
+      } else {
+        newSelectedIndex = selectedIndx
+        newSelectedSubIndex = selectedSubIndex - 1
+      }
+      console.log(newSelectedIndex, newSelectedSubIndex)
       return {
         ...state,
-        selectedIndx: newIndx,
+        selectedIndx: newSelectedIndex,
+        selectedSubIndex: newSelectedSubIndex
       }
     }
     case 'select-right': {
-      const newIndx = Math.min(allIds.length, selectedIndx + 1)
+      let newSelectedIndex
+      let newSelectedSubIndex
+      if (selectedIndx === allIds.length) {
+        newSelectedIndex = selectedIndx
+        newSelectedSubIndex = selectedSubIndex
+      } else if (selectedSubIndex === byId[allIds[selectedIndx]].dataLength - 1) {
+        newSelectedIndex = selectedIndx + 1
+        newSelectedSubIndex = 0
+      } else {
+        newSelectedIndex = selectedIndx
+        newSelectedSubIndex = selectedSubIndex + 1
+      }
+      console.log(newSelectedIndex, newSelectedSubIndex)
       return {
         ...state,
-        selectedIndx: newIndx,
+        selectedIndx: newSelectedIndex,
+        selectedSubIndex: newSelectedSubIndex,
       }
     }
     default:
@@ -130,35 +173,35 @@ function reducer(state, action) {
 
 export function TagExpression({ fields, operators, values, ops }) {
   const [state, dispatch] = useReducer(reducer, initialState)
-  const { tags: { allIds, byId }, newTag, newOp, autofocus } = state;
+  const { tags: { allIds, byId }, newTag, newOp, autofocus, selectedIndx, selectedSubIndex } = state;
   const lastTagId = allIds.slice(-1)[0]
   const lastTagType = lastTagId ? byId[lastTagId]?.type : 'cond'
 
-  // const handleKeyDown = (e) => {
-  //   console.log(e.key)
-  //   switch (e.key) {
-  //     case 'ArrowLeft':
-  //       if (selectedIndx >= 0 && selectedIndx <= allIds.length) {
-  //         dispatch({ type: 'select-left' })
-  //       }
-  //       break;
-  //     case 'ArrowRight':
-  //       if (selectedIndx >= 0 && selectedIndx <= allIds.length) {
-  //         dispatch({ type: 'select-right' })
-  //       }
-  //       break;
-  //     case 'Escape':
-  //       dispatch({ type: 'disable-select' })
-  //       break
-  //     default:
-  //       break;
-  //   }
-  // }
+  const handleKeyDown = (e) => {
+    console.log(e.key)
+    switch (e.key) {
+      case 'ArrowLeft':
+        if (selectedIndx >= 0 && selectedIndx <= allIds.length) {
+          dispatch({ type: 'select-left' })
+        }
+        break;
+      case 'ArrowRight':
+        if (selectedIndx >= 0 && selectedIndx <= allIds.length) {
+          dispatch({ type: 'select-right' })
+        }
+        break;
+      case 'Escape':
+        dispatch({ type: 'disable-select' })
+        break
+      default:
+        break;
+    }
+  }
 
   return (
     <div
       className={styles.TagExpression}
-    // onKeyDown={handleKeyDown}
+      onKeyDown={handleKeyDown}
     >
       {
         allIds.map((tagId, i) => {
@@ -167,7 +210,7 @@ export function TagExpression({ fields, operators, values, ops }) {
             return (
               <Condition
                 key={tag.id}
-                // selected={i === selectedIndx}
+                selectedItem={i === selectedIndx ? selectedSubIndex : -1}
                 fields={fields}
                 operators={operators}
                 values={values}
@@ -184,7 +227,6 @@ export function TagExpression({ fields, operators, values, ops }) {
             return (
               <Operator
                 key={tag.id}
-                // selected={i === selectedIndx}
                 options={ops}
                 value={tag.value}
                 handleChange={(val) => dispatch({ type: 'update-op', id: tagId, value: val })}
@@ -200,14 +242,12 @@ export function TagExpression({ fields, operators, values, ops }) {
           lastTagType === 'cond' ?
             <NewOperator
               autofocus={autofocus}
-              // selected={selectedIndx === allIds.length}
               options={ops}
               value={newOp.value}
               dispatch={dispatch}
             /> :
             <NewCondition
               autofocus={autofocus}
-              // selected={selectedIndx === allIds.length}
               fields={fields}
               operators={operators}
               values={values}

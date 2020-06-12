@@ -5,7 +5,6 @@ import { Condition } from './Condition'
 export function NewCondition(
   {
     autofocus,
-    selected,
     fields,
     operators,
     values,
@@ -23,7 +22,6 @@ export function NewCondition(
   return (
     <Condition
       newTag
-      selected={selected}
       autofocus={autofocus}
       fields={fields}
       operators={operators}
@@ -44,7 +42,6 @@ NewCondition.prototype = {
   operators: PropTypes.arrayOf(PropTypes.string),
   values: PropTypes.arrayOf(PropTypes.string),
   autofocus: PropTypes.bool,
-  selected: PropTypes.bool,
   field: PropTypes.string,
   value: PropTypes.string,
   operator: PropTypes.string,

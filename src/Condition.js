@@ -7,7 +7,7 @@ import styles from './TagExpression.module.css'
 export function Condition(
   {
     autofocus,
-    selected,
+    selectedItem,
     newTag,
     fields,
     operators,
@@ -121,7 +121,7 @@ export function Condition(
 
 Condition.prototype = {
   autofocus: PropTypes.bool,
-  selected: PropTypes.bool,
+  selectedItem: PropTypes.number,
   fields: PropTypes.arrayOf(PropTypes.string),
   operators: PropTypes.arrayOf(PropTypes.string),
   values: PropTypes.arrayOf(PropTypes.string),
