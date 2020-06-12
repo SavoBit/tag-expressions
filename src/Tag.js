@@ -85,14 +85,17 @@ function TagComp(
       >
         <Paper>
           {
-            options.filter(option => option.toLowerCase().includes(value.toLowerCase())).map((option, i) =>
-              <Option
-                key={i}
-                highlight={i === selectedIndex}
-                onSelection={() => { handleSelection(option) }}
-              >
-                {option}
-              </Option>)
+            options.filter(
+              option => option.toLowerCase().includes(value.toLowerCase())).map(
+                (option, i) =>
+                  <Option
+                    key={i}
+                    highlight={i === selectedIndex}
+                    onSelection={() => { handleSelection(option) }}
+                  >
+                    {option}
+                  </Option>
+              )
           }
         </Paper>
       </Popper>

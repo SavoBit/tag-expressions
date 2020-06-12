@@ -112,7 +112,16 @@ export function Condition(
             handleSelection={handleValueSelection}
           />
         </Box>
-        {handleDelete && <span className={styles.delete} onClick={() => handleDelete()}>x</span>}
+        {
+          handleDelete &&
+          <span
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter') { handleDelete() } }}
+            className={styles.delete}
+            onClick={() => handleDelete()}
+          >
+            x
+          </span>}
       </div>
     </ClickAwayListener >
   )

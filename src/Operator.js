@@ -46,7 +46,17 @@ export function Operator(
           handleChange={handleChange}
           handleSelection={handleSelection}
         />
-        {handleDelete && <span className={styles.delete} onClick={() => handleDelete()}>x</span>}
+        {
+          handleDelete &&
+          <span
+            tabIndex={0}
+            className={styles.delete}
+            onKeyDown={(e) => { if (e.key === 'Enter') { handleDelete() } }}
+            onClick={() => handleDelete()}
+          >
+            x
+          </span>
+        }
       </div>
     </ClickAwayListener>
   )
