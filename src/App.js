@@ -16,9 +16,9 @@ function App() {
           keyboard navigation:
         </h4>
         <ul>
-          <li>Use tab and shift+tab to move between different tabs</li>
+          <li>Use tab and shift+tab to move between different tags</li>
           <li>Use up/down arrow to select an option from dropdown menu</li>
-          <li>Hit enter to delete a tag or make a selection </li>
+          <li>Hit enter to delete a tag or make a selection</li>
         </ul>
       </div>
     </div>
